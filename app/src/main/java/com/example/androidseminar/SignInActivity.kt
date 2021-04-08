@@ -6,17 +6,20 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.example.androidseminar.databinding.ActivitySignInBinding
 
 class SignInActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignInBinding
+    private val test = "log"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        Log.d(test, "SignInActivity - onCreate")
 
         buttonClickEvent()
     }
@@ -57,17 +60,50 @@ class SignInActivity : AppCompatActivity() {
                 val id = data?.getStringExtra("userId")
                 val pw = data?.getStringExtra("userPw")
 
+                binding.editId.setText(id)
+                binding.editPw.setText(pw)
+
                 val prefs : SharedPreferences = getSharedPreferences("Login", Context.MODE_PRIVATE)
                 val editor : SharedPreferences.Editor = prefs.edit()
 
                 editor.putString("name", name)
                 editor.putString("id", id)
                 editor.putString("pw", pw)
-//                editor.remove("name")
-//                editor.remove("id")
-//                editor.remove("pw")
                 editor.commit()
+
+                buttonClickEvent()
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(test, "SignInActivity - onStart")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.d(test, "SignInActivity - onRestart")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(test, "SignInActivity - onPause")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(test, "SignInActivity - onResume")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(test, "SignInActivity - onStop")
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(test, "SignInActivity - onStart")
     }
 }
