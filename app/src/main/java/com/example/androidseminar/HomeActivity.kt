@@ -1,5 +1,7 @@
 package com.example.androidseminar
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -8,7 +10,6 @@ import com.example.androidseminar.databinding.ActivityHomeBinding
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
-    private val test = "log"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,8 +17,21 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
         Log.d(test, "HomeActivity - onCreate")
 
-        binding.tvId.setText(intent.getStringExtra("userId"))
-        binding.tvName.setText(intent.getStringExtra("userName"))
+        loginInformation()
+    }
+
+    private fun loginInformation() {
+        val prefs : SharedPreferences = getSharedPreferences("Login", Context.MODE_PRIVATE)
+        val id = prefs.getString("id", "")
+        val name = prefs.getString("name", "")
+
+        binding.tvId.setText(id)
+        binding.tvName.setText(name)
+
+    }
+
+    companion object{
+        private const val test = "log"
     }
 
     override fun onStart() {

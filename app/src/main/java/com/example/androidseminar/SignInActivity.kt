@@ -8,12 +8,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.androidseminar.databinding.ActivitySignInBinding
 
 class SignInActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignInBinding
-    private val test = "log"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,59 +21,74 @@ class SignInActivity : AppCompatActivity() {
         setContentView(binding.root)
         Log.d(test, "SignInActivity - onCreate")
 
-        buttonClickEvent()
+        goToHomeActivity()
+        goToSignUpActivity()
     }
 
-    private fun buttonClickEvent() {
-        val userId = binding.editId.text
-        val userPw = binding.editPw.text
-
-        val prefs : SharedPreferences = getSharedPreferences("Login", Context.MODE_PRIVATE)
-
+    private fun goToHomeActivity() {
         binding.btnLogin.setOnClickListener {
-            val name = prefs.getString("name", "")
-            val id = prefs.getString("id", "")
-            val pw = prefs.getString("pw", "")
-            if (userId.isNullOrBlank() || userPw.isNullOrBlank()) {
-                Toast.makeText(this, "아이디/비밀번호를 확인해주세요!", Toast.LENGTH_SHORT).show()
-            } else if (userId.toString() == id && userPw.toString() == pw) {
-                Toast.makeText(this, "로그인 성공", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, HomeActivity::class.java)
-                intent.putExtra("userId",id)
-                intent.putExtra("userName",name)
-                startActivity(intent)
-            } else {
-                Toast.makeText(this, "아이디/비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show()
+
+            when {
+                checkInputText() -> {
+                    Toast.makeText(this, "아이디/비밀번호를 확인해주세요!", Toast.LENGTH_SHORT).show()
+                }
+                checkLoginInformation() -> {
+                    Toast.makeText(this, "로그인 성공", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, HomeActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+                else -> {
+                    Toast.makeText(this, "아이디/비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show()
+                }
             }
         }
+    }
+
+    private fun goToSignUpActivity(){
         binding.tvSignUp.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
-            startActivityForResult(intent, 100)
+            signUpActivityLauncher.launch(intent)
+        }
+    }
+    
+    private fun checkLoginInformation(): Boolean{
+        val prefs : SharedPreferences = getSharedPreferences("Login", Context.MODE_PRIVATE)
+        val id = prefs.getString("id", "")
+        val pw = prefs.getString("pw", "")
+
+        return binding.editId.text.toString() == id && binding.editPw.text.toString() == pw
+    }
+
+    private fun checkInputText(): Boolean{
+        return binding.editId.text.isNullOrBlank() || binding.editPw.text.isNullOrBlank()
+    }
+    
+    private val signUpActivityLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            val name = it.data?.getStringExtra("userName")
+            val id = it.data?.getStringExtra("userId")
+            val pw = it.data?.getStringExtra("userPw")
+
+            binding.editId.setText(id)
+            binding.editPw.setText(pw)
+
+            val prefs: SharedPreferences = getSharedPreferences("Login", Context.MODE_PRIVATE)
+            val editor: SharedPreferences.Editor = prefs.edit()
+
+            editor.putString("name", name)
+            editor.putString("id", id)
+            editor.putString("pw", pw)
+            editor.commit()
+
+            goToHomeActivity()
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if ( requestCode == 100) {
-            if(resultCode == Activity.RESULT_OK) {
-                val name = data?.getStringExtra("userName")
-                val id = data?.getStringExtra("userId")
-                val pw = data?.getStringExtra("userPw")
-
-                binding.editId.setText(id)
-                binding.editPw.setText(pw)
-
-                val prefs : SharedPreferences = getSharedPreferences("Login", Context.MODE_PRIVATE)
-                val editor : SharedPreferences.Editor = prefs.edit()
-
-                editor.putString("name", name)
-                editor.putString("id", id)
-                editor.putString("pw", pw)
-                editor.commit()
-
-                buttonClickEvent()
-            }
-        }
+    companion object{
+        private const val test = "log"
     }
 
     override fun onStart() {
