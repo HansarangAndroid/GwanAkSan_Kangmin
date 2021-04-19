@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.example.androidseminar.databinding.ActivityHomeBinding
+import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
 
@@ -18,6 +19,7 @@ class HomeActivity : AppCompatActivity() {
         Log.d(test, "HomeActivity - onCreate")
 
         loginInformation()
+        moreRepoListEvent()
     }
 
     private fun loginInformation() {
@@ -28,6 +30,14 @@ class HomeActivity : AppCompatActivity() {
         binding.tvId.setText(id)
         binding.tvName.setText(name)
 
+    }
+
+    private fun moreRepoListEvent(){
+        btn_repo.setOnClickListener {
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.repo_info_fragment, RepoListFragment())
+            transaction.commit()
+        }
     }
 
     companion object{
