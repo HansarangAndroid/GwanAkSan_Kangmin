@@ -6,4 +6,5 @@
     <color name="white">#ffffff</color>
     <color name="repo_border_color">#5F36A8</color>
     <color name="sign_up_border_color">#8B00FF</color>
+    <color name="following_color">#03A9F4</color>
 </resources>

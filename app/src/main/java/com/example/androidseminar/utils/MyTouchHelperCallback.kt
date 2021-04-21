@@ -1,7 +1,8 @@
-package com.example.androidseminar
+package com.example.androidseminar.utils
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.example.androidseminar.adapter.RepoListAdapter
 
 class MyTouchHelperCallback(
     private val itemMoveListener: OnItemMoveListener
@@ -23,7 +24,7 @@ class MyTouchHelperCallback(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
     ): Int {
-        val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
+        val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
         val swipeFlags = ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
         return makeMovementFlags(dragFlags, swipeFlags)
     }
