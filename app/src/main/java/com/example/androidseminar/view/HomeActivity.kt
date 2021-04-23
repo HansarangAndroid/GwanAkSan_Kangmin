@@ -13,10 +13,17 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.androidseminar.R
 import com.example.androidseminar.adapter.RepoListAdapter
+import com.example.androidseminar.data.GithubApiService
 import com.example.androidseminar.data.RepoInfo
+import com.example.androidseminar.data.RetrofitClient
 import com.example.androidseminar.databinding.ActivityHomeBinding
 import com.example.androidseminar.utils.MyTouchHelperCallback
 import kotlinx.android.synthetic.main.activity_home.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class HomeActivity : AppCompatActivity() {
 
@@ -27,7 +34,6 @@ class HomeActivity : AppCompatActivity() {
     private val userInfoActivityLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,41 +82,24 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun addAdapterList(){
-        adapter.repoList.addAll(
-            listOf(
-                RepoInfo(
-                    name = "Algorithm",
-                    description = "알고리즘 공부",
-                    language = "Python"
-                ),
-                RepoInfo(
-                    name = "Kotlin-Programming",
-                    description = "Kotlin-programming",
-                    language = "Kotlin"
-                ),
-                RepoInfo(
-                    name = "MusicPlayer",
-                    description = "음악 앱 실습",
-                    language = "Swift"
-                ),
-                RepoInfo(
-                    name = "IOS-programming",
-                    description = "test programming",
-                    language = "Swift"
-                ),
-                RepoInfo(
-                    name = "AndroidStudy",
-                    description = "2019년 2학기 앱센터 안드로이드 스터디",
-                    language = "Java"
-                ),
-                RepoInfo(
-                    name = "Mobile-Programming",
-                    description = "Android-Programming",
-                    language = "Java"
-                )
-            )
-        )
-        adapter.notifyDataSetChanged()
+        val retrofit = RetrofitClient.getInstance()
+        val api = retrofit.create(GithubApiService::class.java)
+        val callGetRepo = api.reposForUser("kkk5474096")
+
+        callGetRepo.enqueue(object : Callback<List<RepoInfo>> {
+            override fun onResponse(
+                call: Call<List<RepoInfo>>,
+                response: Response<List<RepoInfo>>
+            ) {
+                Log.d("결과", "성공 : ${response.raw()}")
+                adapter.repoList.addAll(response.body()!!)
+                adapter.notifyDataSetChanged()
+            }
+
+            override fun onFailure(call: Call<List<RepoInfo>>, t: Throwable) {
+                Log.d("결과:", "실패 : $t")
+            }
+        })
     }
 
     private fun layoutChangeEvent(){

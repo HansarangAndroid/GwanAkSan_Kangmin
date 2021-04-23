@@ -1,7 +1,6 @@
 package com.example.androidseminar.view
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,15 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.androidseminar.adapter.FollowingListAdapter
 import com.example.androidseminar.adapter.RepoListAdapter
 import com.example.androidseminar.data.FollowingUserInfo
-import com.example.androidseminar.data.GithubClient
-import com.example.androidseminar.data.RepoInfo
 import com.example.androidseminar.databinding.FragmentFollowingListBinding
 import com.example.androidseminar.utils.MyTouchHelperCallback
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 
 class FollowingListFragment : Fragment() {
@@ -55,10 +47,7 @@ class FollowingListFragment : Fragment() {
         addAdapterList()
         layoutChangeEvent()
     }
-
-
-
-
+    
     private fun addAdapterList(){
         adapter.userList.addAll(
             listOf(
