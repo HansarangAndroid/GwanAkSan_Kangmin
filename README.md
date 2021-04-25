@@ -168,7 +168,7 @@ class MyDiffUtil<RepoInfo>(
     }
 ```
 notifyDataSetChanged를 사용하면 리스트 내의 데이터가 바뀌었을때 모든 리스트를 다 바꿔야해서 아이템들이 많다면 지연시간도 길어지고 비효율적일수 밖에 없습니다.
-그래서 MyDiffUtil 클래스를 만들고 DiffUtil을 사용하여 현재 리스트와 교체될 리스트를 비교하고 바꿔야할 리스트만 바꿔줌으로써 notifyDatasetChanged보다 효율적인 데이터 교환을 할 수 있게 했습니다.
+그래서 MyDiffUtil 클래스를 만들고 DiffUtil을 사용하여 현재 리스트와 교체될 리스트를 비교하고 바꿔야할 리스트만 바꿔줌으로써 notifyDataSetChanged보다 효율적인 데이터 교환을 할 수 있게 했습니다.
 
 ### 배운내용
 - 항상 notifyDataSetChanged만을 사용하였는데 DiffiUtil을 사용하여 교체될 리스트만 바꿔줄 수 있다는 것을 알았고 검색을 통해 해당 기능을 구현할 수 있게 되었습니다.
