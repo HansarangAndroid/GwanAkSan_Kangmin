@@ -38,7 +38,7 @@ class HomeActivity : AppCompatActivity() {
         Log.d(test, "HomeActivity - onCreate")
 
         loginInformation()
-        goToFollowingListFragment()
+        goToUserInfoActivity()
         myRepoList()
     }
 
@@ -52,12 +52,11 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
-    private fun goToFollowingListFragment() {
+    private fun goToUserInfoActivity() {
         binding.btnFollowingList.setOnClickListener {
             val intent = Intent(this@HomeActivity, UserInfoActivity::class.java)
             userInfoActivityLauncher.launch(intent)
         }
-
     }
 
     private fun myRepoList(){

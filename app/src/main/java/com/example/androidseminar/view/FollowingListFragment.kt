@@ -32,7 +32,11 @@ class FollowingListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        myFollowList()
 
+    }
+
+    private fun myFollowList(){
         binding.userList.layoutManager = LinearLayoutManager(activity)
         val callback = MyTouchHelperCallback(adapter)
         val touchHelper = ItemTouchHelper(callback)
@@ -49,7 +53,7 @@ class FollowingListFragment : Fragment() {
     }
     
     private fun addAdapterList(){
-        adapter.userList.addAll(
+        adapter.setItems(
             listOf(
                 FollowingUserInfo(
                     userName = "SONPYEONGHWA"
@@ -65,7 +69,6 @@ class FollowingListFragment : Fragment() {
                 )
             )
         )
-        adapter.notifyDataSetChanged()
     }
 
     private fun layoutChangeEvent(){

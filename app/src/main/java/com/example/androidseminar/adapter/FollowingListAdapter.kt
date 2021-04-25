@@ -4,9 +4,12 @@ import android.content.Context
 import com.example.androidseminar.data.FollowingUserInfo
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.androidseminar.data.RepoInfo
 import com.example.androidseminar.databinding.ItemFollowUserBinding
+import com.example.androidseminar.utils.MyDiffUtil
 import com.example.androidseminar.utils.MyTouchHelperCallback
 import java.util.*
 
@@ -40,6 +43,15 @@ class FollowingListAdapter : RecyclerView.Adapter<FollowingListAdapter.Following
 
     fun afterDragAndDrop() {
         notifyDataSetChanged()
+    }
+
+    fun setItems(newItems: List<FollowingUserInfo>) {
+        val diffUtil = MyDiffUtil(userList, newItems)
+        val diffResult = DiffUtil.calculateDiff(diffUtil)
+
+        userList.clear()
+        userList.addAll(newItems)
+        diffResult.dispatchUpdatesTo(this)
     }
 
     override fun onBindViewHolder(holder: FollowingUserViewHolder, position: Int) {
