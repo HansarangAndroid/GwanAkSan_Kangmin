@@ -1,6 +1,5 @@
 package com.example.androidseminar.view
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -11,7 +10,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.androidseminar.R
 import com.example.androidseminar.adapter.RepoListAdapter
 import com.example.androidseminar.data.GithubApiService
 import com.example.androidseminar.data.RepoInfo
@@ -22,14 +20,12 @@ import kotlinx.android.synthetic.main.activity_home.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
     private val adapter = RepoListAdapter()
-    var currentLayout = false
+    private var currentLayout = false
 
     private val userInfoActivityLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -92,8 +88,7 @@ class HomeActivity : AppCompatActivity() {
                 response: Response<List<RepoInfo>>
             ) {
                 Log.d("결과", "성공 : ${response.raw()}")
-                adapter.repoList.addAll(response.body()!!)
-                adapter.notifyDataSetChanged()
+                adapter.setItems(response.body()!!)
             }
 
             override fun onFailure(call: Call<List<RepoInfo>>, t: Throwable) {

@@ -2,16 +2,18 @@ package com.example.androidseminar.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidseminar.data.RepoInfo
 import com.example.androidseminar.databinding.ItemRepoBinding
+import com.example.androidseminar.utils.MyDiffUtil
 import com.example.androidseminar.utils.MyTouchHelperCallback
 import java.util.*
 
 class RepoListAdapter : RecyclerView.Adapter<RepoListAdapter.RepoViewHolder>(),
     MyTouchHelperCallback.OnItemMoveListener {
 
-    val repoList = mutableListOf<RepoInfo>()
+    private val repoList = mutableListOf<RepoInfo>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -22,6 +24,15 @@ class RepoListAdapter : RecyclerView.Adapter<RepoListAdapter.RepoViewHolder>(),
     }
 
     override fun getItemCount(): Int = repoList.size
+
+    fun setItems(newItems: List<RepoInfo>) {
+        val diffUtil = MyDiffUtil(repoList, newItems)
+        val diffResult = DiffUtil.calculateDiff(diffUtil)
+
+        repoList.clear()
+        repoList.addAll(newItems)
+        diffResult.dispatchUpdatesTo(this)
+    }
 
     interface OnStartDragListener {
         fun onStartDrag(viewHolder: RepoViewHolder)
@@ -43,7 +54,6 @@ class RepoListAdapter : RecyclerView.Adapter<RepoListAdapter.RepoViewHolder>(),
 
     override fun onBindViewHolder(holder: RepoViewHolder, position: Int) {
         holder.onBind(repoList[position])
-
     }
 
     class RepoViewHolder(
