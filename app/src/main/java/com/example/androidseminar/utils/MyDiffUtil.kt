@@ -15,7 +15,7 @@ class MyDiffUtil<RepoInfo>(
         val oldItem = oldItems[oldItemPosition]
         val newItem = newItems[newItemPosition]
 
-        return oldItem == newItem
+        return oldItem.hashCode() == newItem.hashCode()
 
     }
 

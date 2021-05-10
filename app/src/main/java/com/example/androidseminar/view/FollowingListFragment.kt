@@ -17,8 +17,8 @@ import com.example.androidseminar.utils.MyTouchHelperCallback
 
 class FollowingListFragment : Fragment() {
 
-    lateinit var binding: FragmentFollowingListBinding
-    var currentLayout = false
+    private lateinit var binding: FragmentFollowingListBinding
+    private var changeLayoutManager = false
     private val adapter = FollowingListAdapter()
 
     override fun onCreateView(
@@ -73,12 +73,12 @@ class FollowingListFragment : Fragment() {
 
     private fun layoutChangeEvent(){
         binding.btnLayoutChange.setOnClickListener {
-            if (currentLayout) {
+            if (changeLayoutManager) {
                 binding.userList.layoutManager = LinearLayoutManager(activity)
-                currentLayout = !currentLayout
+                changeLayoutManager = !changeLayoutManager
             } else {
                 binding.userList.layoutManager = GridLayoutManager(activity, 2)
-                currentLayout = !currentLayout
+                changeLayoutManager = !changeLayoutManager
             }
         }
     }

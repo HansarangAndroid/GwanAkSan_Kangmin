@@ -77,9 +77,8 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun addAdapterList(){
-        val retrofit = RetrofitClient.getInstance()
-        val api = retrofit.create(GithubApiService::class.java)
-        val callGetRepo = api.reposForUser("kkk5474096")
+        val retrofitApi = RetrofitClient.apiService
+        val callGetRepo = retrofitApi.reposForUser("kkk5474096")
 
         callGetRepo.enqueue(object : Callback<List<RepoInfo>> {
             override fun onResponse(
@@ -89,7 +88,6 @@ class HomeActivity : AppCompatActivity() {
                 Log.d("결과", "성공 : ${response.raw()}")
                 adapter.setItems(response.body()!!)
             }
-
             override fun onFailure(call: Call<List<RepoInfo>>, t: Throwable) {
                 Log.d("결과:", "실패 : $t")
             }
