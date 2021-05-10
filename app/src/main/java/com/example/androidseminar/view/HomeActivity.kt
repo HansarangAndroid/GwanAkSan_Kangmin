@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.androidseminar.adapter.RepoListAdapter
-import com.example.androidseminar.data.GithubApiService
 import com.example.androidseminar.data.RepoInfo
 import com.example.androidseminar.data.RetrofitClient
 import com.example.androidseminar.databinding.ActivityHomeBinding
@@ -25,7 +24,7 @@ class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
     private val adapter = RepoListAdapter()
-    private var currentLayout = false
+    private var changeLayoutManager = false
 
     private val userInfoActivityLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -96,12 +95,12 @@ class HomeActivity : AppCompatActivity() {
 
     private fun layoutChangeEvent(){
         binding.btnLayoutChange.setOnClickListener {
-            if (currentLayout) {
+            if (changeLayoutManager) {
                 binding.recyclerRepo.layoutManager = LinearLayoutManager(this)
-                currentLayout = !currentLayout
+                changeLayoutManager = !changeLayoutManager
             } else {
                 binding.recyclerRepo.layoutManager = GridLayoutManager(this, 2)
-                currentLayout = !currentLayout
+                changeLayoutManager = !changeLayoutManager
             }
         }
     }
