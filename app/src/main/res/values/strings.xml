@@ -13,4 +13,7 @@
     <string name="sign_up">SIGN UP</string>
     <string name="introduce">시도하고 성장하는 개발자</string>
     <string name="id">아이디</string>
+    <string name="more">MORE</string>
+    <string name="change_layout">레이아웃 변경</string>
+    <string name="following_list">Following List</string>
 </resources>

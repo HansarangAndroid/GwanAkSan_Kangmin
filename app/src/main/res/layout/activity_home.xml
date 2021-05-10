@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity">
+    tools:context=".view.HomeActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -50,12 +50,14 @@
 
         <ScrollView
             android:id="@+id/sv_introduction"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:orientation="vertical"
+            android:fillViewport="true"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_name">
+            app:layout_constraintTop_toBottomOf="@id/tv_name"
+            app:layout_constraintWidth_percent="0.5">
 
             <TextView
                 android:id="@+id/tv_introduction"
@@ -63,6 +65,18 @@
                 android:layout_height="wrap_content"
                 android:text="@string/introduce" />
         </ScrollView>
+
+        <Button
+            android:id="@+id/btn_following_list"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintWidth_percent="0.2"
+            app:layout_constraintDimensionRatio="2:1"
+            android:text="@string/more"
+            android:background="@drawable/repo_border"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -72,5 +86,29 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.4" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_repo"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        app:layout_constraintBottom_toTopOf="@id/btn_layout_change"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline"
+        tools:listitem="@layout/item_repo"/>
+
+    <Button
+        android:id="@+id/btn_layout_change"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/repo_border_color"
+        android:text="@string/change_layout"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recycler_repo"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

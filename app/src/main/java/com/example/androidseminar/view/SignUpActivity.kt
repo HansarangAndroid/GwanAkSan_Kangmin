@@ -1,4 +1,4 @@
-package com.example.androidseminar
+package com.example.androidseminar.view
 
 import android.app.Activity
 import android.content.Intent
