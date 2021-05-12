@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.androidseminar.data.RepoInfo
+import com.example.androidseminar.data.GitHubRepoInfo
 import com.example.androidseminar.databinding.ItemRepoBinding
 import com.example.androidseminar.utils.MyDiffUtil
 import com.example.androidseminar.utils.MyTouchHelperCallback
@@ -13,19 +13,19 @@ import java.util.*
 class RepoListAdapter : RecyclerView.Adapter<RepoListAdapter.RepoViewHolder>(),
     MyTouchHelperCallback.OnItemMoveListener {
 
-    private val repoList = mutableListOf<RepoInfo>()
+    private val repoList = mutableListOf<GitHubRepoInfo>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): RepoViewHolder {
-        val binding= ItemRepoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemRepoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return RepoViewHolder(binding)
     }
 
     override fun getItemCount(): Int = repoList.size
 
-    fun setItems(newItems: List<RepoInfo>) {
+    fun setItems(newItems: List<GitHubRepoInfo>) {
         val diffUtil = MyDiffUtil(repoList, newItems)
         val diffResult = DiffUtil.calculateDiff(diffUtil)
 
@@ -59,11 +59,11 @@ class RepoListAdapter : RecyclerView.Adapter<RepoListAdapter.RepoViewHolder>(),
     class RepoViewHolder(
         private val binding: ItemRepoBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun onBind(repoInfo : RepoInfo) {
+        fun onBind(gitHubRepoInfo: GitHubRepoInfo) {
             binding.apply {
-                repoName.text = repoInfo.name
-                repoContext.text = repoInfo.description
-                repoLanguage.text = repoInfo.language
+                repoName.text = gitHubRepoInfo.name
+                repoContext.text = gitHubRepoInfo.description
+                repoLanguage.text = gitHubRepoInfo.language
             }
         }
     }

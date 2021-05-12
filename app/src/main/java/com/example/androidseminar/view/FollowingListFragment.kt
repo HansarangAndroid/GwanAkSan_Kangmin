@@ -1,6 +1,7 @@
 package com.example.androidseminar.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,15 +11,19 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.androidseminar.adapter.FollowingListAdapter
 import com.example.androidseminar.adapter.RepoListAdapter
-import com.example.androidseminar.data.FollowingUserInfo
+import com.example.androidseminar.api.GithubServiceCreater
+import com.example.androidseminar.data.GithubUserInfo
 import com.example.androidseminar.databinding.FragmentFollowingListBinding
 import com.example.androidseminar.utils.MyTouchHelperCallback
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class FollowingListFragment : Fragment() {
 
-    lateinit var binding: FragmentFollowingListBinding
-    var currentLayout = false
+    private lateinit var binding: FragmentFollowingListBinding
+    var changeLayoutManager = false
     private val adapter = FollowingListAdapter()
 
     override fun onCreateView(
@@ -36,49 +41,53 @@ class FollowingListFragment : Fragment() {
 
     }
 
-    private fun myFollowList(){
-        binding.userList.layoutManager = LinearLayoutManager(activity)
+    private fun myFollowList() {
+        binding.recyclerUserList.layoutManager = LinearLayoutManager(activity)
         val callback = MyTouchHelperCallback(adapter)
         val touchHelper = ItemTouchHelper(callback)
-        touchHelper.attachToRecyclerView(binding.userList)
-        binding.userList.adapter = adapter
+        touchHelper.attachToRecyclerView(binding.recyclerUserList)
+        binding.recyclerUserList.adapter = adapter
         adapter.startDrag(object : RepoListAdapter.OnStartDragListener {
             override fun onStartDrag(viewHolder: RepoListAdapter.RepoViewHolder) {
                 touchHelper.startDrag(viewHolder)
             }
         })
 
-        addAdapterList()
+        addFollowingList()
         layoutChangeEvent()
     }
-    
-    private fun addAdapterList(){
-        adapter.setItems(
-            listOf(
-                FollowingUserInfo(
-                    userName = "SONPYEONGHWA"
-                ),
-                FollowingUserInfo(
-                    userName = "kkk5474096"
-                ),
-                FollowingUserInfo(
-                    userName = "Jionee"
-                ),
-                FollowingUserInfo(
-                    userName = "ssonghyun101"
+
+    private fun addFollowingList() {
+        val call = GithubServiceCreater.apiService.getFollowerInfo()
+        call.enqueue(object : Callback<List<GithubUserInfo>> {
+            override fun onResponse(
+                call: Call<List<GithubUserInfo>>,
+                response: Response<List<GithubUserInfo>>
+            ) {
+                Log.d(
+                    "test",
+                    response.code().toString() + response.body()
                 )
-            )
-        )
+                if (response.code() == 200) {
+                    adapter.setItems(response.body()!!)
+                }
+            }
+
+            override fun onFailure(call: Call<List<GithubUserInfo>>, t: Throwable) {
+                Log.d("test", t.toString() + "FollowingListFragment onFailure")
+            }
+
+        })
     }
 
-    private fun layoutChangeEvent(){
+    private fun layoutChangeEvent() {
         binding.btnLayoutChange.setOnClickListener {
-            if (currentLayout) {
-                binding.userList.layoutManager = LinearLayoutManager(activity)
-                currentLayout = !currentLayout
+            if (changeLayoutManager) {
+                binding.recyclerUserList.layoutManager = LinearLayoutManager(activity)
+                changeLayoutManager = !changeLayoutManager
             } else {
-                binding.userList.layoutManager = GridLayoutManager(activity, 2)
-                currentLayout = !currentLayout
+                binding.recyclerUserList.layoutManager = GridLayoutManager(activity, 2)
+                changeLayoutManager = !changeLayoutManager
             }
         }
     }

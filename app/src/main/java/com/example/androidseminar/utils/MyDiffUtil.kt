@@ -1,8 +1,6 @@
 package com.example.androidseminar.utils
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.androidseminar.data.FollowingUserInfo
-import com.example.androidseminar.data.RepoInfo
 
 class MyDiffUtil<RepoInfo>(
     private val oldItems: List<RepoInfo>,
@@ -15,7 +13,7 @@ class MyDiffUtil<RepoInfo>(
         val oldItem = oldItems[oldItemPosition]
         val newItem = newItems[newItemPosition]
 
-        return oldItem == newItem
+        return oldItem.hashCode() == newItem.hashCode()
 
     }
 

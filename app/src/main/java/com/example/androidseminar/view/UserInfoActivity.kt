@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.androidseminar.R
 import com.example.androidseminar.databinding.ActivityUserInfoBinding
 
-class UserInfoActivity: AppCompatActivity() {
+class UserInfoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUserInfoBinding
 
