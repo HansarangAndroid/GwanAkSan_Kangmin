@@ -23,7 +23,9 @@ import retrofit2.Response
 class FollowingListFragment : Fragment() {
 
     private lateinit var binding: FragmentFollowingListBinding
-    var changeLayoutManager = false
+
+    private var changeLayoutManager = false
+
     private val adapter = FollowingListAdapter()
 
     override fun onCreateView(
