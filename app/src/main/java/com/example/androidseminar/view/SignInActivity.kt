@@ -59,7 +59,8 @@ class SignInActivity : AppCompatActivity() {
             ) {
                 Log.d("test", response.code().toString() + " " + response.body()?.message)
                 if (response.code() == 200) {
-                    goToHomeActivity()
+                    val data = response.body()?.data
+                    goToHomeActivity(data?.user_nickname)
                 } else {
                     Toast.makeText(this@SignInActivity, "아이디/비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT)
                         .show()
@@ -73,8 +74,8 @@ class SignInActivity : AppCompatActivity() {
         })
     }
 
-    private fun goToHomeActivity() {
-        Toast.makeText(this, "로그인 성공", Toast.LENGTH_SHORT).show()
+    private fun goToHomeActivity(nickName: String?) {
+        Toast.makeText(this, nickName+"님 로그인 성공하였습니다.", Toast.LENGTH_SHORT).show()
         val intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)
         finish()

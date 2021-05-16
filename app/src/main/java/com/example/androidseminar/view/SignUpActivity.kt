@@ -59,7 +59,8 @@ class SignUpActivity : AppCompatActivity() {
             ) {
                 Log.d("test", response.code().toString() + " " + response.body()?.message)
                 if (response.code() == 200) {
-                    successSignUp()
+                    val data = response.body()?.data
+                    successSignUp(data?.nickname)
                 } else {
                     failureSignUp()
                 }
@@ -71,8 +72,8 @@ class SignUpActivity : AppCompatActivity() {
         })
     }
 
-    private fun successSignUp() {
-        Toast.makeText(this, "회원가입을 성공했습니다.", Toast.LENGTH_SHORT).show()
+    private fun successSignUp(nickName: String?) {
+        Toast.makeText(this, nickName+"님 회원가입을 성공했습니다.", Toast.LENGTH_SHORT).show()
         Log.d("test", binding.editName.text.toString() + "텍스트")
         var intent = Intent()
         intent.putExtra("userId", binding.editId.text.toString())
