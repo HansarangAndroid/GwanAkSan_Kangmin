@@ -53,12 +53,12 @@ class FollowingListFragment : Fragment() {
             }
         })
 
-        addFollowingList()
+        userFollowingList()
         layoutChangeEvent()
     }
 
-    private fun addFollowingList() {
-        val call = GithubServiceCreater.apiService.getFollowerInfo()
+    private fun userFollowingList() {
+        val call = GithubServiceCreater.apiService.getFollowingInfo()
         call.enqueue(object : Callback<List<GithubUserInfo>> {
             override fun onResponse(
                 call: Call<List<GithubUserInfo>>,

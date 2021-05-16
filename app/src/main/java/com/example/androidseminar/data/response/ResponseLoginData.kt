@@ -1,4 +1,4 @@
-package com.example.androidseminar.data
+package com.example.androidseminar.data.response
 
 import com.google.gson.annotations.SerializedName
 

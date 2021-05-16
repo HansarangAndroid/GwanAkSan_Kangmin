@@ -36,12 +36,12 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
         Log.d(test, "HomeActivity - onCreate")
 
-        loginInformation()
+        userInformation()
         goToUserInfoActivity()
         myRepoList()
     }
 
-    private fun loginInformation() {
+    private fun userInformation() {
         val call = GithubServiceCreater.apiService.getUserInfo()
 
         call.enqueue(object : Callback<GithubUserInfo> {

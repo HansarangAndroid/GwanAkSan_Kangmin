@@ -6,12 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import com.example.androidseminar.R
 import com.example.androidseminar.api.ServiceCreator
-import com.example.androidseminar.data.RequestSignUpData
-import com.example.androidseminar.data.ResponseSignUpData
+import com.example.androidseminar.data.request.RequestSignUpData
+import com.example.androidseminar.data.response.ResponseSignUpData
 import com.example.androidseminar.databinding.ActivitySignUpBinding
-import kotlinx.android.synthetic.main.activity_sign_up.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

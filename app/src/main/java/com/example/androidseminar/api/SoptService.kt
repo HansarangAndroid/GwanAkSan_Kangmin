@@ -1,9 +1,9 @@
 package com.example.androidseminar.api
 
-import com.example.androidseminar.data.RequestLoginData
-import com.example.androidseminar.data.RequestSignUpData
-import com.example.androidseminar.data.ResponseLoginData
-import com.example.androidseminar.data.ResponseSignUpData
+import com.example.androidseminar.data.request.RequestLoginData
+import com.example.androidseminar.data.request.RequestSignUpData
+import com.example.androidseminar.data.response.ResponseLoginData
+import com.example.androidseminar.data.response.ResponseSignUpData
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST

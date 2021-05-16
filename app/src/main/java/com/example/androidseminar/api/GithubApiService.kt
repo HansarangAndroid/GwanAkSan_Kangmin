@@ -13,6 +13,6 @@ interface GithubApiService {
     @GET("users/kkk5474096")
     fun getUserInfo(): Call<GithubUserInfo>
 
-    @GET("users/kkk5474096/followers")
-    fun getFollowerInfo(): Call<List<GithubUserInfo>>
+    @GET("users/kkk5474096/following")
+    fun getFollowingInfo(): Call<List<GithubUserInfo>>
 }

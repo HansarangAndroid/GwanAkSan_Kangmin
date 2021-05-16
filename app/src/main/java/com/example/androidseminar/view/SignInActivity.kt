@@ -1,17 +1,15 @@
 package com.example.androidseminar.view
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.androidseminar.api.ServiceCreator
-import com.example.androidseminar.data.RequestLoginData
-import com.example.androidseminar.data.ResponseLoginData
+import com.example.androidseminar.data.request.RequestLoginData
+import com.example.androidseminar.data.response.ResponseLoginData
 import com.example.androidseminar.databinding.ActivitySignInBinding
 import retrofit2.Call
 import retrofit2.Callback
