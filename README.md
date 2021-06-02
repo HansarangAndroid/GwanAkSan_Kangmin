@@ -1,177 +1,242 @@
-# Second Week Assignment
+# Fourth Week Assignment
+## Level1
+#### Postman 테스트 사진
+##### 회원가입 TEST
+<img width="650" alt="스크린샷 2021-05-16 오후 6 40 40" src="https://user-images.githubusercontent.com/56147398/118393060-eee0b780-b677-11eb-8ee4-3600873ee7f4.png">
+
+##### 로그인 TEST
+<img width="650" alt="스크린샷 2021-05-16 오후 6 54 29" src="https://user-images.githubusercontent.com/56147398/118393094-2ea79f00-b678-11eb-920a-f2f46d09a7d5.png">
+
+##### Github Api Test
+<img width="650" alt="스크린샷 2021-05-11 오전 12 10 50" src="https://user-images.githubusercontent.com/56147398/118393128-6d3d5980-b678-11eb-9346-78db4a160ac5.png">
+
+#### 회원가입, 로그인 구현 gif
 <p align="center">
-<img src = "https://user-images.githubusercontent.com/56147398/115987656-f7058400-a5f0-11eb-99c6-c3e54969e010.gif" width = 25% />
-<img src = "https://user-images.githubusercontent.com/56147398/115987662-fa990b00-a5f0-11eb-9371-f84036ef870c.gif" width = 25% /> </p>
+<img src = "https://user-images.githubusercontent.com/56147398/118393174-a4ac0600-b678-11eb-8393-f219abcc6673.gif" width = 25% />
+<img src = "https://user-images.githubusercontent.com/56147398/118393175-a675c980-b678-11eb-886e-e8cd7c65376d.gif" width = 25% /> </p>
 
-### Level1
-#### item_repo.xml
-``` xml
-    <TextView
-        android:id="@+id/repo_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxLines="1"
-        android:paddingBottom="5dp"
-        android:ellipsize="end"
-        android:text="레포지터리 이름"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+#### 로그인, 회원가입 retrofit interface
+``` kotlin
+interface SoptService {
+    @POST("login/signin")
+    fun postLogin(
+        @Body body: RequestLoginData
+    ): Call<ResponseLoginData>
 
-    <TextView
-        android:id="@+id/repo_context"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:text="레포지터리 설명"
-        android:textSize="13sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/repo_name" />
-```
-`maxLine = "1"`로 설정하여 레포지터리 이름과 설명이 한줄에 표시되게 한 뒤 `ellipsize = "end"` 를 사용하여 이름이나 설명이 긴경우 뒤에... 이 나오도록 처리하였습니다.
-
-#### HomeActivity
-``` Kotlin
-    private fun goToFollowingListFragment() {
-        binding.btnFollowingList.setOnClickListener {
-            val intent = Intent(this@HomeActivity, UserInfoActivity::class.java)
-            userInfoActivityLauncher.launch(intent)
-        }
-    }
-```
-유저 정보 부분에 more란 버튼을 추가하였고 해당 버튼을 클릭 시 2차 세미나시간에 만든 FollwingListFragment를 가진 UserInfoActivity를 띄워줍니다.
-
-#### UserInfoActivity
-``` Kotlin
-class UserInfoActivity: AppCompatActivity() {
-
-    private lateinit var binding: ActivityUserInfoBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityUserInfoBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.user_info_fragment, FollowingListFragment())
-        transaction.commit()
-    }
+    @POST("login/signup")
+    fun postSignUp(
+        @Body body: RequestSignUpData
+    ): Call<ResponseSignUpData>
 }
 ```
-repository 정보를 담고 있는 FollwingListFragment를 가진 UserInfoActivity입니다.
 
-### Level2
-#### FollowingListFragment <br>
-``` Kotlin
-binding.userList.layoutManager = GridLayoutManager(activity, 2)
+#### ServiceCreator
+``` kotlin
+object ServiceCreator {
+    private const val BASE_URL = "http://cherishserver.com/"
+
+    private val retrofit: Retrofit = Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    val soptService: SoptService = retrofit.create(SoptService::class.java)
+}
 ```
-해당 코드로 과제에서 만든 아이템을 Grid로 바꾸어 줄 수 있습니다.
 
-    private fun layoutChangeEvent(){
-        binding.btnLayoutChange.setOnClickListener {
-            if (currentLayout) {
-                binding.userList.layoutManager = LinearLayoutManager(activity)
-                currentLayout = !currentLayout
-            } else {
-                binding.userList.layoutManager = GridLayoutManager(activity, 2)
-                currentLayout = !currentLayout
-            }
-        }
-    }
-또한 버튼을 추가해서 해당 버튼을 클릭 시 Linear형식에서 Grid형식으로 변경되거나 Grid형식에서 Linear형식으로 변경되도록 하였습니다.
+#### SignUpActivity
+``` kotlin
+    private fun signUpRequest() {
+        val requestSignUpData = RequestSignUpData(
+            email = binding.editId.text.toString(),
+            password = binding.editPw.text.toString(),
+            sex = if (binding.radioSex.checkedRadioButtonId == binding.radioSexMan.id) "0" else "1",
+            nickname = binding.editName.text.toString(),
+            phone = binding.editPhone.text.toString(),
+            birth = "${binding.datepicker.year}-${binding.datepicker.month}-${binding.datepicker.dayOfMonth}"
+        )
 
-#### RepoListAdapter
-``` Kotlin
-    interface OnStartDragListener {
-        fun onStartDrag(viewHolder: RepoViewHolder)
-    }
+        val call: Call<ResponseSignUpData> =
+            ServiceCreator.soptService.postSignUp(requestSignUpData)
 
-    override fun onItemMove(fromPosition: Int, toPosition: Int) {
-        Collections.swap(repoList, fromPosition, toPosition)
-        notifyItemMoved(fromPosition, toPosition)
-    }
-
-    override fun onItemSwipe(position: Int) {
-        repoList.removeAt(position)
-        notifyItemRemoved(position)
-    }
-
-    fun afterDragAndDrop() {
-        notifyDataSetChanged()
-    }
-    }
-```
-MyTouchHelperCallback에서 만든 함수들을 이용하여 adapter에 item을 길게 눌러 위치를 변경하거나 item을 옆으로 슬라이드 하면 삭제되는 기능을 넣었습니다.
-
-#### HomeAcitivty
-``` Kotlin
-    private fun addAdapterList(){
-        val retrofit = RetrofitClient.getInstance()
-        val api = retrofit.create(GithubApiService::class.java)
-        val callGetRepo = api.reposForUser("kkk5474096")
-
-        callGetRepo.enqueue(object : Callback<List<RepoInfo>> {
+        call.enqueue(object : Callback<ResponseSignUpData> {
             override fun onResponse(
-                call: Call<List<RepoInfo>>,
-                response: Response<List<RepoInfo>>
+                call: Call<ResponseSignUpData>,
+                response: Response<ResponseSignUpData>
             ) {
-                Log.d("결과", "성공 : ${response.raw()}")
-                adapter.setItems(response.body()!!)
+                Log.d("test", response.code().toString() + " " + response.body()?.message)
+                if (response.code() == 200) {
+                    successSignUp()
+                } else {
+                    failureSignUp()
+                }
             }
 
-            override fun onFailure(call: Call<List<RepoInfo>>, t: Throwable) {
-                Log.d("결과:", "실패 : $t")
+            override fun onFailure(call: Call<ResponseSignUpData>, t: Throwable) {
+                Log.d("test", t.toString() + "SignUp onFailure")
+            }
+        })
+    }
+
+    private fun successSignUp() {
+        Toast.makeText(this, "회원가입을 성공했습니다.", Toast.LENGTH_SHORT).show()
+        Log.d("test", binding.editName.text.toString() + "텍스트")
+        var intent = Intent()
+        intent.putExtra("userId", binding.editId.text.toString())
+        intent.putExtra("userPw", binding.editPw.text.toString())
+        setResult(Activity.RESULT_OK, intent)
+        finish()
+    }
+
+    private fun failureSignUp() {
+        Toast.makeText(this, "회원가입에 실패했습니다. 다시 시도해주세요", Toast.LENGTH_SHORT).show()
+    }
+```
+SoptService interface와 ServiceCreator를 사용하여 회원가입을 위해 입력한 값들을 Post방식으로 서버에 보낸 후 서버통신이 성공적이면 회원가입을 성공했다는 Toast메세지와 함께 회원가입 화면을 종료 후 다시 로그인 화면으로 돌아갑니다.
+
+#### SignInActivity
+``` kotlin
+    private fun checkLoginInformation() {
+        val requestLoginData = RequestLoginData(
+            email = binding.editId.text.toString(),
+            password = binding.editPw.text.toString()
+        )
+        val call = ServiceCreator.soptService.postLogin(requestLoginData)
+        call.enqueue(object : Callback<ResponseLoginData> {
+            override fun onResponse(
+                call: Call<ResponseLoginData>,
+                response: Response<ResponseLoginData>
+            ) {
+                Log.d("test", response.code().toString() + " " + response.body()?.message)
+                if (response.code() == 200) {
+                    goToHomeActivity()
+                } else {
+                    Toast.makeText(this@SignInActivity, "아이디/비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseLoginData>, t: Throwable) {
+                Log.d("test", t.toString() + "SignIn onFailure")
+            }
+
+        })
+    }
+
+    private fun goToHomeActivity() {
+        Toast.makeText(this, "로그인 성공", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+```
+회원가입에서 입력했던 email과 password를 Post방식으로 서버에 보냅니다. 해당 값이 일치하여 서버와의 통신이 성공적이면 로그인 성공이라는 Toast메세지와 함께 HomeAcitvity로 화면을 전환합니다.
+
+## Level2
+<p align="center">
+<img src = "https://user-images.githubusercontent.com/56147398/118394318-ec359080-b67e-11eb-8492-787537495901.png" width = 25% />
+<img src = "https://user-images.githubusercontent.com/56147398/118394323-f0fa4480-b67e-11eb-9bb7-12c6e98cb731.png" width = 25% /> </p>
+
+#### GithubApiService
+``` kotlin
+interface GithubApiService {
+    @GET("users/{user}/repos")
+    fun reposForUser(@Path("user") user: String): Call<List<GitHubRepoInfo>>
+
+    @GET("users/kkk5474096")
+    fun getUserInfo(): Call<GithubUserInfo>
+
+    @GET("users/kkk5474096/following")
+    fun getFollowingInfo(): Call<List<GithubUserInfo>>
+}
+```
+`reposForUser()`를 사용하여 해당하는 아이디의 repository들의 대한 정보를 받아올 수 있습니다. <br>
+`getUserInfo()` 를 사용하여 해당하는 아이디의 전체적인 정보를 받아올 수 있습니다. <br>
+`getFollowingInfo()`를 사용하여 해당하는 아이디의 팔로워 정보를 받아올 수 있습니다. <br>
+#### HomeActivity
+``` kotlin
+    private fun userInformation() {
+        val call = GithubServiceCreater.apiService.getUserInfo()
+
+        call.enqueue(object : Callback<GithubUserInfo> {
+            override fun onResponse(
+                call: Call<GithubUserInfo>,
+                response: Response<GithubUserInfo>
+            ) {
+                Log.d(
+                    "test",
+                    response.code().toString() + response.body()?.login + response.body()!!.bio
+                )
+                if (response.code() == 200) {
+                    binding.tvName.text = response.body()!!.name
+                    binding.tvId.text = response.body()!!.login
+                    binding.tvIntroduction.text = response.body()!!.bio
+                    Glide.with(this@HomeActivity).load(response.body()!!.avatar_url)
+                        .into(binding.ivProfile)
+                }
+            }
+
+            override fun onFailure(call: Call<GithubUserInfo>, t: Throwable) {
+                Log.d("test", t.toString() + "HomeActivity onFailure")
             }
         })
     }
 ```
-Retrofit2 라이브러리를 사용하여 Github api에 Repository를 가져오도록 구현했습니다.
+앞서 설명했던 getUserInfo()를 사용하여 Github 해당하는 아이디에 대한 아이디와 닉네임, 자기소개, 프로필사진에 대한 정보를 받아옵니다. <br>
+프로필 사진은 url로 오기 때문에 `Glide` 라이브러리를 사용하여 이미지로 변환시켜주었습니다.
 
-### Level3
-#### MyDiffUtil
-``` Kotlin
-class MyDiffUtil<RepoInfo>(
-    private val oldItems: List<RepoInfo>,
-    private val newItems: List<RepoInfo>
-) : DiffUtil.Callback() {
-    override fun getOldListSize(): Int = oldItems.size
-    override fun getNewListSize(): Int = newItems.size
+``` kotlin
+    private fun addAdapterList() {
+        val callGetRepo = GithubServiceCreater.apiService.reposForUser("kkk5474096")
 
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val oldItem = oldItems[oldItemPosition]
-        val newItem = newItems[newItemPosition]
+        callGetRepo.enqueue(object : Callback<List<GitHubRepoInfo>> {
+            override fun onResponse(
+                call: Call<List<GitHubRepoInfo>>,
+                response: Response<List<GitHubRepoInfo>>
+            ) {
+                Log.d("결과", "성공 : ${response.raw()}")
+                if (response.code() == 200) {
+                    adapter.setItems(response.body()!!)
+                }
+            }
 
-        return oldItem == newItem
-
-    }
-
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val oldItem = oldItems[oldItemPosition]
-        val newItem = newItems[newItemPosition]
-
-        return oldItem == newItem
-    }
-}
-```
-
-#### RepoListAdapter
-``` Kotlin
-    fun setItems(newItems: List<FollowingUserInfo>) {
-        val diffUtil = MyDiffUtil(userList, newItems)
-        val diffResult = DiffUtil.calculateDiff(diffUtil)
-
-        userList.clear()
-        userList.addAll(newItems)
-        diffResult.dispatchUpdatesTo(this)
+            override fun onFailure(call: Call<List<GitHubRepoInfo>>, t: Throwable) {
+                Log.d("test", t.toString() + "HomeActivity onFailure")
+            }
+        })
     }
 ```
-notifyDataSetChanged를 사용하면 리스트 내의 데이터가 바뀌었을때 모든 리스트를 다 바꿔야해서 아이템들이 많다면 지연시간도 길어지고 비효율적일수 밖에 없습니다.
-그래서 MyDiffUtil 클래스를 만들고 DiffUtil을 사용하여 현재 리스트와 교체될 리스트를 비교하고 바꿔야할 리스트만 바꿔줌으로써 notifyDataSetChanged보다 효율적인 데이터 교환을 할 수 있게 했습니다.
+해당 아이디의 깃허브의 Repository 정보들을 받아서 recyclerView 안에 넣도록 구현했습니다.
+
+``` kotlin
+    private fun userFollowingList() {
+        val call = GithubServiceCreater.apiService.getFollowingInfo()
+        call.enqueue(object : Callback<List<GithubUserInfo>> {
+            override fun onResponse(
+                call: Call<List<GithubUserInfo>>,
+                response: Response<List<GithubUserInfo>>
+            ) {
+                Log.d(
+                    "test",
+                    response.code().toString() + response.body()
+                )
+                if (response.code() == 200) {
+                    adapter.setItems(response.body()!!)
+                }
+            }
+
+            override fun onFailure(call: Call<List<GithubUserInfo>>, t: Throwable) {
+                Log.d("test", t.toString() + "FollowingListFragment onFailure")
+            }
+
+        })
+    }
+```
+해당 아이디의 깃허브의 Following 정보들을 받아서 recyclerView 안에 넣도록 구현했습니다.
+
 
 ### 배운내용
-- 항상 notifyDataSetChanged만을 사용하였는데 DiffiUtil을 사용하여 교체될 리스트만 바꿔줄 수 있다는 것을 알았고 검색을 통해 해당 기능을 구현할 수 있게 되었습니다.
-- 리사이클러뷰에서 ItemTouchHelper.Callback을 이용하여 item의 위치를 변경하거나 삭제할 수 있다는 것을 알 수 있었고 많은 공부가 되었습니다.
-- Repository를 불러오는 과정에서 Retrofit2를 사용하였는데 많은 어려움이 있었지만 사용법을 깨달았습니다.
+- object로 싱글턴을 구현해서 서버와 통신하는 방법을 깨달았지만 좀 더 효율적인 방법을 찾기 위해 공부해야 할 것 같습니다.
+- 코드로 서버와 통신하기 전에 Postman을 사용하여 먼저 서버와 통신해볼 수 있다는 것을 배웠습니다.
+- 서버통신은 많이 할수록 늘기때문에 많이 해보면서 여러 에러들을 고쳐볼 수 있도록 공부하겠습니다.
 

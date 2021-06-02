@@ -1,10 +1,10 @@
-package com.example.androidseminar.data
+package com.example.androidseminar.api
 
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object RetrofitClient {
+object GithubServiceCreater {
     private val gson = GsonBuilder().setLenient().create()
     private const val BASE_URL = "https://api.github.com/"
 

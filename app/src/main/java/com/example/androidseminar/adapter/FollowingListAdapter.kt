@@ -1,27 +1,28 @@
 package com.example.androidseminar.adapter
 
 import android.content.Context
-import com.example.androidseminar.data.FollowingUserInfo
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.androidseminar.data.RepoInfo
+import com.example.androidseminar.data.GithubUserInfo
 import com.example.androidseminar.databinding.ItemFollowUserBinding
 import com.example.androidseminar.utils.MyDiffUtil
 import com.example.androidseminar.utils.MyTouchHelperCallback
 import java.util.*
 
-class FollowingListAdapter : RecyclerView.Adapter<FollowingListAdapter.FollowingUserViewHolder>(), MyTouchHelperCallback.OnItemMoveListener {
+class FollowingListAdapter : RecyclerView.Adapter<FollowingListAdapter.FollowingUserViewHolder>(),
+    MyTouchHelperCallback.OnItemMoveListener {
 
-    val userList = mutableListOf<FollowingUserInfo>()
+    val userList = mutableListOf<GithubUserInfo>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): FollowingListAdapter.FollowingUserViewHolder {
-        val binding= ItemFollowUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemFollowUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return FollowingUserViewHolder(binding)
     }
 
@@ -45,7 +46,7 @@ class FollowingListAdapter : RecyclerView.Adapter<FollowingListAdapter.Following
         notifyDataSetChanged()
     }
 
-    fun setItems(newItems: List<FollowingUserInfo>) {
+    fun setItems(newItems: List<GithubUserInfo>) {
         val diffUtil = MyDiffUtil(userList, newItems)
         val diffResult = DiffUtil.calculateDiff(diffUtil)
 
@@ -61,9 +62,9 @@ class FollowingListAdapter : RecyclerView.Adapter<FollowingListAdapter.Following
     class FollowingUserViewHolder(
         private val binding: ItemFollowUserBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun onBind(followingUserInfo : FollowingUserInfo, context: Context) {
-            binding.followUserName.text = followingUserInfo.userName
-            Glide.with(context).load(followingUserInfo.userImage).into(binding.followUserImage)
+        fun onBind(followingUserInfo: GithubUserInfo, context: Context) {
+            binding.followUserName.text = followingUserInfo.login
+            Glide.with(context).load(followingUserInfo.avatar_url).into(binding.followUserImage)
         }
     }
 }

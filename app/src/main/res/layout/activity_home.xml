@@ -15,12 +15,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_profile"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@drawable/ic_launcher_background"
             android:src="@drawable/ic_launcher_foreground"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="2dp"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -53,8 +54,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:orientation="vertical"
             android:fillViewport="true"
+            android:orientation="vertical"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_name"
             app:layout_constraintWidth_percent="0.5">
@@ -70,13 +71,13 @@
             android:id="@+id/btn_following_list"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintWidth_percent="0.2"
-            app:layout_constraintDimensionRatio="2:1"
-            android:text="@string/more"
             android:background="@drawable/repo_border"
+            android:text="@string/more"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintDimensionRatio="2:1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintWidth_percent="0.2" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -92,12 +93,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="10dp"
-        app:layout_constraintBottom_toTopOf="@id/btn_layout_change"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@id/btn_layout_change"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/guideline"
-        tools:listitem="@layout/item_repo"/>
+        tools:listitem="@layout/item_repo" />
 
     <Button
         android:id="@+id/btn_layout_change"
@@ -105,10 +106,9 @@
         android:layout_height="wrap_content"
         android:background="@color/repo_border_color"
         android:text="@string/change_layout"
-        android:textStyle="bold"
         android:textColor="@color/white"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recycler_repo"/>
-
+        app:layout_constraintTop_toBottomOf="@id/recycler_repo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,8 +1,6 @@
 package com.example.androidseminar.utils
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.androidseminar.data.FollowingUserInfo
-import com.example.androidseminar.data.RepoInfo
 
 class MyDiffUtil<RepoInfo>(
     private val oldItems: List<RepoInfo>,
