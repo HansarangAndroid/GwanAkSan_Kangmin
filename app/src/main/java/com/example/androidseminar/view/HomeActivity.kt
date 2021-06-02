@@ -13,6 +13,7 @@ import com.example.androidseminar.adapter.RepoListAdapter
 import com.example.androidseminar.data.GitHubRepoInfo
 import com.example.androidseminar.api.GithubServiceCreater
 import com.example.androidseminar.data.GithubUserInfo
+import com.example.androidseminar.data.SoptUserAuthStorage
 import com.example.androidseminar.databinding.ActivityHomeBinding
 import com.example.androidseminar.utils.MyTouchHelperCallback
 import kotlinx.android.synthetic.main.activity_home.*
@@ -39,6 +40,7 @@ class HomeActivity : AppCompatActivity() {
         userInformation()
         goToUserInfoActivity()
         myRepoList()
+        logoutEvent()
     }
 
     private fun userInformation() {
@@ -123,6 +125,14 @@ class HomeActivity : AppCompatActivity() {
                 binding.recyclerRepo.layoutManager = GridLayoutManager(this, 2)
                 changeLayoutManager = !changeLayoutManager
             }
+        }
+    }
+
+    private fun logoutEvent() {
+        binding.btnLogout.setOnClickListener {
+            SoptUserAuthStorage(this).clearAuthStorage()
+            startActivity(Intent(this, SignInActivity::class.java))
+            finish()
         }
     }
 

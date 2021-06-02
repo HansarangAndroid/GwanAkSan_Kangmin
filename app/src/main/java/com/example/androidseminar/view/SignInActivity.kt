@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.androidseminar.api.ServiceCreator
+import com.example.androidseminar.data.SoptUserAuthStorage
+import com.example.androidseminar.data.SoptUserInfo
 import com.example.androidseminar.data.request.RequestLoginData
 import com.example.androidseminar.data.response.ResponseLoginData
 import com.example.androidseminar.databinding.ActivitySignInBinding
@@ -25,8 +27,17 @@ class SignInActivity : AppCompatActivity() {
         setContentView(binding.root)
         Log.d(test, "SignInActivity - onCreate")
 
+        searchUserAuthStorage()
         loginCheckEvent()
         goToSignUpActivity()
+    }
+
+    private fun searchUserAuthStorage() {
+        with(SoptUserAuthStorage(this)) {
+            if (hasUserData()) {
+                checkLoginInformation(getUserData().let { RequestLoginData(it.id, it.password) })
+            }
+        }
     }
 
     private fun loginCheckEvent() {
@@ -34,7 +45,11 @@ class SignInActivity : AppCompatActivity() {
             if (checkInputText()) {
                 showToast("아이디/비밀번호를 확인해주세요!")
             } else {
-                checkLoginInformation()
+                val requestLoginData = RequestLoginData(
+                    email = binding.editId.text.toString(),
+                    password = binding.editPw.text.toString()
+                )
+                checkLoginInformation(requestLoginData)
             }
         }
     }
@@ -46,11 +61,7 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkLoginInformation() {
-        val requestLoginData = RequestLoginData(
-            email = binding.editId.text.toString(),
-            password = binding.editPw.text.toString()
-        )
+    private fun checkLoginInformation(requestLoginData: RequestLoginData) {
         val call = ServiceCreator.soptService.postLogin(requestLoginData)
         call.enqueue(object : Callback<ResponseLoginData> {
             override fun onResponse(
@@ -59,6 +70,11 @@ class SignInActivity : AppCompatActivity() {
             ) {
                 Log.d("test", response.code().toString() + " " + response.body()?.message)
                 if (response.code() == 200) {
+                    with(SoptUserAuthStorage(this@SignInActivity)) {
+                        if(!hasUserData()) {
+                            saveUserdata(requestLoginData.let { SoptUserInfo(it.email, it.password) })
+                        }
+                    }
                     val data = response.body()?.data
                     goToHomeActivity(data?.user_nickname)
                 } else {
