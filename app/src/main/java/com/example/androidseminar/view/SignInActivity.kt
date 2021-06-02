@@ -12,6 +12,7 @@ import com.example.androidseminar.data.SoptUserInfo
 import com.example.androidseminar.data.request.RequestLoginData
 import com.example.androidseminar.data.response.ResponseLoginData
 import com.example.androidseminar.databinding.ActivitySignInBinding
+import com.example.androidseminar.utils.enqueueUtil
 import com.example.androidseminar.utils.showToast
 import retrofit2.Call
 import retrofit2.Callback
@@ -63,30 +64,18 @@ class SignInActivity : AppCompatActivity() {
 
     private fun checkLoginInformation(requestLoginData: RequestLoginData) {
         val call = ServiceCreator.soptService.postLogin(requestLoginData)
-        call.enqueue(object : Callback<ResponseLoginData> {
-            override fun onResponse(
-                call: Call<ResponseLoginData>,
-                response: Response<ResponseLoginData>
-            ) {
-                Log.d("test", response.code().toString() + " " + response.body()?.message)
-                if (response.code() == 200) {
-                    with(SoptUserAuthStorage(this@SignInActivity)) {
-                        if(!hasUserData()) {
-                            saveUserdata(requestLoginData.let { SoptUserInfo(it.email, it.password) })
-                        }
+
+        call.enqueueUtil(
+            onSuccess = {
+                with(SoptUserAuthStorage(this@SignInActivity)) {
+                    if(!hasUserData()) {
+                        saveUserdata(requestLoginData.let { SoptUserInfo(it.email, it.password) })
                     }
-                    val data = response.body()?.data
-                    goToHomeActivity(data?.user_nickname)
-                } else {
-                    showToast("아이디/비밀번호가 일치하지 않습니다.")
                 }
+                val data = it.data
+                goToHomeActivity(data?.user_nickname)
             }
-
-            override fun onFailure(call: Call<ResponseLoginData>, t: Throwable) {
-                Log.d("test", t.toString() + "SignIn onFailure")
-            }
-
-        })
+        )
     }
 
     private fun goToHomeActivity(nickName: String?) {

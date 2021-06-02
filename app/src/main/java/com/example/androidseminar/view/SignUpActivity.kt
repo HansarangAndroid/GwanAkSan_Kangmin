@@ -9,6 +9,7 @@ import com.example.androidseminar.api.ServiceCreator
 import com.example.androidseminar.data.request.RequestSignUpData
 import com.example.androidseminar.data.response.ResponseSignUpData
 import com.example.androidseminar.databinding.ActivitySignUpBinding
+import com.example.androidseminar.utils.enqueueUtil
 import com.example.androidseminar.utils.showToast
 import retrofit2.Call
 import retrofit2.Callback
