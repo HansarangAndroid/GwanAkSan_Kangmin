@@ -5,12 +5,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.androidseminar.api.ServiceCreator
 import com.example.androidseminar.data.request.RequestLoginData
 import com.example.androidseminar.data.response.ResponseLoginData
 import com.example.androidseminar.databinding.ActivitySignInBinding
+import com.example.androidseminar.utils.showToast
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,7 +32,7 @@ class SignInActivity : AppCompatActivity() {
     private fun loginCheckEvent() {
         binding.btnLogin.setOnClickListener {
             if (checkInputText()) {
-                Toast.makeText(this, "아이디/비밀번호를 확인해주세요!", Toast.LENGTH_SHORT).show()
+                showToast("아이디/비밀번호를 확인해주세요!")
             } else {
                 checkLoginInformation()
             }
@@ -62,8 +62,7 @@ class SignInActivity : AppCompatActivity() {
                     val data = response.body()?.data
                     goToHomeActivity(data?.user_nickname)
                 } else {
-                    Toast.makeText(this@SignInActivity, "아이디/비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT)
-                        .show()
+                    showToast("아이디/비밀번호가 일치하지 않습니다.")
                 }
             }
 
@@ -75,7 +74,7 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun goToHomeActivity(nickName: String?) {
-        Toast.makeText(this, nickName+"님 로그인 성공하였습니다.", Toast.LENGTH_SHORT).show()
+        showToast(nickName+"님 로그인 성공하였습니다.")
         val intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)
         finish()
