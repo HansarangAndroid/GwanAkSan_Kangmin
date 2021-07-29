@@ -5,11 +5,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import com.example.androidseminar.api.ServiceCreator
 import com.example.androidseminar.data.request.RequestSignUpData
 import com.example.androidseminar.data.response.ResponseSignUpData
 import com.example.androidseminar.databinding.ActivitySignUpBinding
+import com.example.androidseminar.utils.enqueueUtil
+import com.example.androidseminar.utils.showToast
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,7 +33,7 @@ class SignUpActivity : AppCompatActivity() {
     private fun signUpButtonClickEvent() {
         binding.btnSignUp.setOnClickListener {
             if (checkInputText()) {
-                Toast.makeText(this, "빈 칸이 있는지 확인해주세요", Toast.LENGTH_SHORT).show()
+                showToast("빈 칸이 있는지 확인해주세요")
             } else {
                 signUpRequest()
             }
@@ -73,7 +74,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun successSignUp(nickName: String?) {
-        Toast.makeText(this, nickName+"님 회원가입을 성공했습니다.", Toast.LENGTH_SHORT).show()
+        showToast(nickName+"님 회원가입을 성공했습니다.")
         Log.d("test", binding.editName.text.toString() + "텍스트")
         var intent = Intent()
         intent.putExtra("userId", binding.editId.text.toString())
@@ -83,7 +84,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun failureSignUp() {
-        Toast.makeText(this, "회원가입에 실패했습니다. 다시 시도해주세요", Toast.LENGTH_SHORT).show()
+        showToast("회원가입에 실패했습니다. 다시 시도해주세요")
     }
 
     private fun checkInputText(): Boolean {

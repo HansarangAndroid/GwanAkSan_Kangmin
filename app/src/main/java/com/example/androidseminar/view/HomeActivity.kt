@@ -13,8 +13,10 @@ import com.example.androidseminar.adapter.RepoListAdapter
 import com.example.androidseminar.data.GitHubRepoInfo
 import com.example.androidseminar.api.GithubServiceCreater
 import com.example.androidseminar.data.GithubUserInfo
+import com.example.androidseminar.data.SoptUserAuthStorage
 import com.example.androidseminar.databinding.ActivityHomeBinding
 import com.example.androidseminar.utils.MyTouchHelperCallback
+import com.example.androidseminar.utils.enqueueUtil
 import kotlinx.android.synthetic.main.activity_home.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -39,34 +41,23 @@ class HomeActivity : AppCompatActivity() {
         userInformation()
         goToUserInfoActivity()
         myRepoList()
+        logoutEvent()
     }
 
     private fun userInformation() {
         val call = GithubServiceCreater.apiService.getUserInfo()
 
-        call.enqueue(object : Callback<GithubUserInfo> {
-            override fun onResponse(
-                call: Call<GithubUserInfo>,
-                response: Response<GithubUserInfo>
-            ) {
-                Log.d(
-                    "test",
-                    response.code().toString() + response.body()?.login + response.body()!!.bio
-                )
-                if (response.code() == 200) {
-                    binding.tvName.text = response.body()!!.name
-                    binding.tvId.text = response.body()!!.login
-                    binding.tvIntroduction.text = response.body()!!.bio
-                    Glide.with(this@HomeActivity).load(response.body()!!.avatar_url)
-                        .into(binding.ivProfile)
-                }
+        call.enqueueUtil(
+            onSuccess = {
+                binding.tvName.text = it.name
+                binding.tvId.text = it.login
+                binding.tvIntroduction.text = it.bio
+                Glide.with(this@HomeActivity).load(it.avatar_url)
+                    .into(binding.ivProfile)
             }
 
-            override fun onFailure(call: Call<GithubUserInfo>, t: Throwable) {
-                Log.d("test", t.toString() + "HomeActivity onFailure")
-            }
-        })
 
+        )
     }
 
     private fun goToUserInfoActivity() {
@@ -93,35 +84,14 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
-//<<<<<<< HEAD
     private fun addAdapterList() {
         val callGetRepo = GithubServiceCreater.apiService.reposForUser("kkk5474096")
-//=======
-//    private fun addAdapterList(){
-//        val retrofitApi = RetrofitClient.apiService
-//        val callGetRepo = retrofitApi.reposForUser("kkk5474096")
-//>>>>>>> c1c314b8eff3fa3505c478462ed257e6c66e379b
 
-        callGetRepo.enqueue(object : Callback<List<GitHubRepoInfo>> {
-            override fun onResponse(
-                call: Call<List<GitHubRepoInfo>>,
-                response: Response<List<GitHubRepoInfo>>
-            ) {
-                Log.d("결과", "성공 : ${response.raw()}")
-                if (response.code() == 200) {
-                    adapter.setItems(response.body()!!)
-                }
+        callGetRepo.enqueueUtil(
+            onSuccess = {
+                adapter.setItems(it)
             }
-//<<<<<<< HEAD
-
-            override fun onFailure(call: Call<List<GitHubRepoInfo>>, t: Throwable) {
-                Log.d("test", t.toString() + "HomeActivity onFailure")
-//=======
-//            override fun onFailure(call: Call<List<RepoInfo>>, t: Throwable) {
-//                Log.d("결과:", "실패 : $t")
-//>>>>>>> c1c314b8eff3fa3505c478462ed257e6c66e379b
-            }
-        })
+        )
     }
 
     private fun layoutChangeEvent() {
@@ -133,6 +103,14 @@ class HomeActivity : AppCompatActivity() {
                 binding.recyclerRepo.layoutManager = GridLayoutManager(this, 2)
                 changeLayoutManager = !changeLayoutManager
             }
+        }
+    }
+
+    private fun logoutEvent() {
+        binding.btnLogout.setOnClickListener {
+            SoptUserAuthStorage(this).clearAuthStorage()
+            startActivity(Intent(this, SignInActivity::class.java))
+            finish()
         }
     }
 

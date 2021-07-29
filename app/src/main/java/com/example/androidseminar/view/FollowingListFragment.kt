@@ -15,6 +15,7 @@ import com.example.androidseminar.api.GithubServiceCreater
 import com.example.androidseminar.data.GithubUserInfo
 import com.example.androidseminar.databinding.FragmentFollowingListBinding
 import com.example.androidseminar.utils.MyTouchHelperCallback
+import com.example.androidseminar.utils.enqueueUtil
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -61,25 +62,12 @@ class FollowingListFragment : Fragment() {
 
     private fun userFollowingList() {
         val call = GithubServiceCreater.apiService.getFollowingInfo()
-        call.enqueue(object : Callback<List<GithubUserInfo>> {
-            override fun onResponse(
-                call: Call<List<GithubUserInfo>>,
-                response: Response<List<GithubUserInfo>>
-            ) {
-                Log.d(
-                    "test",
-                    response.code().toString() + response.body()
-                )
-                if (response.code() == 200) {
-                    adapter.setItems(response.body()!!)
-                }
-            }
 
-            override fun onFailure(call: Call<List<GithubUserInfo>>, t: Throwable) {
-                Log.d("test", t.toString() + "FollowingListFragment onFailure")
+        call.enqueueUtil(
+            onSuccess = {
+                adapter.setItems(it)
             }
-
-        })
+        )
     }
 
     private fun layoutChangeEvent() {

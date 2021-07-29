@@ -22,5 +22,6 @@
     <string name="sex">성별</string>
     <string name="write_phone">전화번호를 입력해주세요</string>
     <string name="phone">전화번호</string>
+    <string name="logout">LOGOUT</string>
 
 </resources>
